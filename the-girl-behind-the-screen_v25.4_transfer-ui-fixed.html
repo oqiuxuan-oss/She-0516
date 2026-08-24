@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>她 / SHE — 親密關係傾向調查</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans TC",sans-serif}
+body{background:#2C3E50;color:#777;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:14px;transition:background 2.2s ease,color 1.5s ease;overflow:hidden}
+.card{position:relative;z-index:30;width:min(500px,100%);max-height:88vh;overflow:auto;background:#f7f7f5;border-radius:9px;padding:28px;box-shadow:0 8px 30px #0005;transition:background 1.5s,color 1.5s}
+.title{font-size:20px;font-weight:700;margin-bottom:8px}.sub{font-size:12px;color:#aaa;margin-bottom:18px}.text{font-size:14px;line-height:1.85;white-space:pre-line}
+button{display:block;width:100%;padding:12px 13px;margin:7px 0;border:1px solid #ddd;background:#fafafa;color:#777;border-radius:5px;text-align:left;cursor:pointer;font-size:14px}@media (hover:hover){button:hover{background:#e9e9e7;color:#555}}
+.primary{text-align:center}.bar{height:2px;background:#ddd;margin:-5px 0 18px}.bar i{display:block;height:100%;background:#999;transition:.3s}.input{position:relative;z-index:100;display:block;width:100%;height:110px;resize:vertical;padding:11px;border:1px solid #aaa;border-radius:6px;font:inherit;color:#222;background:#fff!important;pointer-events:auto!important;user-select:text;-webkit-user-select:text;touch-action:manipulation;-webkit-touch-callout:default;-webkit-appearance:none;appearance:none;outline:none;opacity:1}.input:focus{border-color:#999;box-shadow:0 0 0 2px rgba(0,0,0,.06)}
+.question-note{margin-top:14px;padding-top:11px;border-top:1px solid #e5e5e3;font-size:12px;line-height:1.7;color:#8a8a88;font-style:italic;min-height:42px}.answer-whisper{margin-top:8px;font-size:12px;color:#8b0000;opacity:.82;min-height:24px;font-style:italic;transition:opacity .3s ease}.memory{margin-top:16px;font-size:12px;color:#8b0000;opacity:.55}.chat{height:290px;overflow:auto;margin-bottom:10px}.msg{font-size:14px;line-height:1.75;white-space:pre-line;margin:9px 0}.you{text-align:right;color:#888}.her{color:#555}.typing{opacity:.6}.chat-wrap{position:relative;min-height:330px}.portrait-slot{position:absolute;right:10px;bottom:8px;width:150px;height:220px;border:1px dashed rgba(139,0,0,.28);border-radius:12px;display:flex;align-items:flex-end;justify-content:center;pointer-events:auto;z-index:3;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(139,0,0,.025))}.portrait-slot::after{content:'立绘位置';font-size:10px;color:rgba(139,0,0,.28);padding-bottom:5px}.portrait-slot img{max-width:100%;max-height:100%;display:block;object-fit:contain}
+#red{position:fixed;inset:0;background:rgba(130,0,0,0);pointer-events:none;z-index:20;transition:background 3s ease}#linger{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:21;color:rgba(0,0,0,.25);font-size:clamp(34px,9vw,68px);font-weight:700;letter-spacing:5px;opacity:0;pointer-events:none;transition:opacity 2s ease;white-space:nowrap}
+body.decay #red{background:rgba(145,0,0,.12)}body.decay #linger{opacity:.25}body.broken{background:#b20f18;color:#080808}body.broken .card{background:#c71924;color:#080808;box-shadow:none}body.broken .title,body.broken .text,body.broken .sub,body.broken .msg,body.broken button{color:#080808}body.broken button{background:#d32932;border-color:#111}
+.memoryButton{border:0;background:transparent!important;text-align:center;color:#8b0000!important;font-size:11px;padding:5px;opacity:.55}.memoryButton:hover{opacity:1}#voicePanel{display:none;margin-top:12px;padding:10px;border:1px solid #ddd;border-radius:5px;background:#f1f1ef}.voice-note{font-size:12px;color:#888;margin-bottom:7px}.secretText{white-space:pre-line;line-height:1.9;letter-spacing:1px}
+@media(max-width:600px){body{padding:8px;align-items:flex-start}.card{padding:20px;width:100%;max-height:calc(100vh - 16px);margin-top:8px}.chat{height:300px}.input{min-height:120px;font-size:16px;line-height:1.5}.final-screen{padding-bottom:24px}}
+.final-watching-note{font-size:80%;opacity:.25;text-align:center;margin-top:7px;line-height:1.4;pointer-events:none}
+
+/* === Random question breakdown === */
+body.random-breakdown{
+  background:#780008!important;
+  color:#fff!important;
+  overflow:hidden!important;
+}
+body.random-breakdown .card{
+  background:#b0000b!important;
+  color:#fff!important;
+  box-shadow:0 0 0 1px #350006,0 0 60px #350006,inset 0 0 90px rgba(35,0,0,.55)!important;
+  animation:cardJitter .16s infinite steps(2,end);
+}
+body.random-breakdown .title,
+body.random-breakdown .sub,
+body.random-breakdown .text,
+body.random-breakdown .question-note,
+body.random-breakdown button{color:#fff!important}
+body.random-breakdown button{
+  background:#8d0009!important;
+  border-color:#ff5a5a!important;
+  cursor:not-allowed!important;
+  opacity:.78;
+}
+body.random-breakdown .bar,
+body.random-breakdown .question-note{border-color:#ff5a5a!important}
+body.random-breakdown .bar i{background:#fff!important}
+.breakdown-question{
+  animation:textGlitch .11s infinite steps(2,end);
+  font-weight:900!important;
+  letter-spacing:2px;
+}
+.breakdown-opt{animation:optionDrift .23s infinite alternate steps(2,end)}
+.breakdown-noise{
+  position:fixed;inset:0;z-index:60;pointer-events:none;overflow:hidden;
+}
+.breakdown-noise span{
+  position:absolute;color:rgba(45,0,0,.72);
+  font-size:clamp(18px,4vw,42px);font-weight:900;
+  letter-spacing:4px;white-space:nowrap;
+  animation:floatWord var(--d) linear infinite;
+  transform:rotate(var(--r));
+}
+.breakdown-scan{
+  position:fixed;inset:0;z-index:61;pointer-events:none;
+  background:repeating-linear-gradient(to bottom,rgba(255,255,255,.035) 0,rgba(255,255,255,.035) 1px,transparent 1px,transparent 5px);
+  mix-blend-mode:screen;animation:scanFlicker .12s infinite;
+}
+.breakdown-vignette{
+  position:fixed;inset:-15%;z-index:62;pointer-events:none;
+  box-shadow:inset 0 0 180px 80px rgba(25,0,0,.72);
+}
+@keyframes cardJitter{
+  0%{transform:translate(0,0) rotate(0)}
+  25%{transform:translate(-2px,1px) rotate(-.15deg)}
+  50%{transform:translate(2px,-1px) rotate(.18deg)}
+  75%{transform:translate(-1px,-2px) rotate(.1deg)}
+  100%{transform:translate(1px,2px) rotate(-.1deg)}
+}
+@keyframes textGlitch{
+  0%{transform:translate(0);text-shadow:0 0 0 #fff}
+  25%{transform:translate(-3px,1px) skewX(-2deg);text-shadow:4px 0 #300}
+  50%{transform:translate(3px,-1px) skewX(3deg);text-shadow:-4px 0 #500}
+  75%{transform:translate(-1px,2px);text-shadow:2px 0 #300}
+  100%{transform:translate(1px,-2px);text-shadow:-2px 0 #500}
+}
+@keyframes optionDrift{
+  from{transform:translateX(-1px) rotate(-.2deg)}
+  to{transform:translateX(2px) rotate(.25deg)}
+}
+@keyframes floatWord{
+  0%{transform:translate3d(0,110vh,0) rotate(var(--r));opacity:0}
+  10%{opacity:.85}
+  50%{opacity:.6}
+  90%{opacity:.82}
+  100%{transform:translate3d(var(--x),-20vh,0) rotate(calc(var(--r) + 8deg));opacity:0}
+}
+@keyframes scanFlicker{
+  0%,100%{opacity:.35}
+  50%{opacity:.8}
+}
+@media(max-width:600px){
+  body.random-breakdown .card{max-height:92vh}
+  .breakdown-noise span{font-size:clamp(16px,6vw,30px)}
+}
+
+.answer-indicator{
+  width:100%;
+  height:3px;
+  margin:10px 0 14px;
+  background:rgba(120,120,120,.28);
+  border-radius:3px;
+  transition:background .25s ease, box-shadow .25s ease, transform .15s ease;
+  cursor:text;
+}
+.answer-indicator.active{
+  background:#b0000b;
+  box-shadow:0 0 7px rgba(176,0,11,.35);
+}
+.answer-indicator:active{transform:scaleY(1.35)}
+
+.final-input-label{display:block;font-size:.9em;margin:8px 0 6px;color:#555}
+.final-screen .input{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+.final-screen .primary{position:relative;z-index:101}
+
+/* === Player records / cross-device transfer === */
+#recordButton{position:fixed;left:12px;top:12px;z-index:200;padding:9px 12px;border:1px solid rgba(255,255,255,.35);border-radius:7px;background:rgba(255,255,255,.9);color:#666;font-size:12px;cursor:pointer;box-shadow:0 3px 12px #0002;width:auto;margin:0}
+body.broken #recordButton{background:#d32932;color:#fff;border-color:#fff}
+
+.credits{margin-top:14px;padding-top:12px;border-top:1px solid #e5e5e3}.credits-title{font-size:12px;letter-spacing:.08em;margin-bottom:10px}.credit-row{padding:6px 0;line-height:1.6}.credit-role{font-size:11px;color:#999;display:block;margin-bottom:2px}.credit-links{display:flex;flex-wrap:wrap;gap:7px}.credit-link{display:inline-block;color:inherit;text-decoration:none;border-bottom:1px dotted #888;cursor:pointer;transition:color .2s,border-color .2s}.credit-link:hover,.credit-link:focus{color:#8b0000;border-color:#8b0000}.credits-note{font-size:11px;color:#999;margin-top:9px}
+
+.record-panel{font-size:13px;line-height:1.7}.record-row{padding:8px 0;border-bottom:1px solid #e5e5e3}.record-label{font-size:11px;color:#999}.record-value{word-break:break-word}.record-code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;background:#f0f0ee;padding:8px;border-radius:5px;user-select:all}.achievement{display:flex;gap:9px;align-items:flex-start;padding:8px 0;border-bottom:1px solid #eee}.achievement .badge{font-size:18px;width:24px}.muted{font-size:11px;color:#999}.transfer-actions{display:flex;gap:8px}.transfer-actions button{width:auto;flex:1;text-align:center}.toast{position:fixed;top:18px;right:18px;z-index:9999;max-width:280px;padding:12px 16px;border:1px solid #222;background:#111;color:#fff;border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,.22);font-size:13px;opacity:0;transform:translateY(-8px);pointer-events:none;transition:opacity .2s,transform .2s}.toast.show{opacity:1;transform:translateY(0)}.qr-box{display:flex;justify-content:center;align-items:center;min-height:170px;margin:10px 0;background:#fff;border-radius:6px;padding:10px}.qr-box img{max-width:180px;height:auto}.import-box{width:100%;min-height:70px;padding:10px;border:1px solid #aaa;border-radius:6px;font:inherit;resize:vertical}
+</style>
+<style>
+#achievementToastHost{position:fixed;right:18px;top:18px;z-index:12000;display:flex;flex-direction:column;gap:10px;width:min(360px,calc(100vw - 36px));pointer-events:none}
+.achievement-toast{display:grid;grid-template-columns:42px 1fr;gap:10px;align-items:center;background:rgba(24,24,24,.96);color:#eee;border:1px solid #777;border-radius:8px;padding:10px 12px;box-shadow:0 8px 30px #0008;animation:toastIn .35s ease,toastOut .5s ease 4.4s forwards;pointer-events:none}
+.achievement-toast .trophy{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#4b3b1e;color:#f2d27a;font-size:20px}
+.achievement-toast .toast-kicker{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;opacity:.65}
+.achievement-toast .toast-title{font-weight:700;font-size:14px;margin-top:2px}.achievement-toast .toast-desc{font-size:11px;opacity:.68;margin-top:2px}
+@keyframes toastIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}@keyframes toastOut{to{transform:translateX(110%);opacity:0}}
+.final-portrait{position:relative;width:min(260px,72vw);height:220px;margin:4px auto 16px;border-radius:12px;background:linear-gradient(160deg,#ddd,#f7f7f5 55%,#cfcfcf);border:1px solid #bbb;overflow:hidden;cursor:pointer;user-select:none;touch-action:manipulation;box-shadow:0 8px 22px #0002}
+.portrait-head{position:absolute;left:50%;top:38px;transform:translateX(-50%);width:104px;height:118px;border-radius:48% 48% 45% 45%;background:#eee;border:2px solid #888;cursor:pointer;z-index:3}
+.portrait-hair{position:absolute;left:50%;top:24px;transform:translateX(-50%);width:128px;height:115px;border-radius:50% 50% 28% 28%;background:#444;z-index:4;pointer-events:none}
+.portrait-eye{position:absolute;top:94px;width:9px;height:5px;border-radius:50%;background:#222;z-index:5;pointer-events:none}.portrait-eye.l{left:calc(50% - 34px)}.portrait-eye.r{left:calc(50% + 25px)}
+.portrait-hint{font-size:11px;text-align:center;opacity:.55;margin-top:-8px;margin-bottom:10px}
+.fake-cursor{position:fixed;z-index:13000;width:18px;height:18px;border-left:2px solid #111;border-top:2px solid #111;transform:rotate(-45deg);pointer-events:none;display:none;filter:drop-shadow(0 1px 1px #fff)}
+.final-portrait.requesting{box-shadow:0 0 0 2px #8b0000,0 0 25px rgba(139,0,0,.28)}
+</style>
+<div id="achievementToastHost" aria-live="polite"></div><div id="fakeCursor" class="fake-cursor"></div>
+</head>
+<body><button id="recordButton" type="button" onclick="openRecords()">记录</button><div id="red"></div><div id="linger">妳還在嗎？</div><main class="card" id="card"><div class="title">《親密關係傾向調查》</div>
+<div class="sub">一份匿名的小測驗。請按照第一直覺回答。</div>
+<div class="text" style="margin-bottom:18px">如果中途覺得奇怪，也可以隨時離開。</div>
+<button class="primary" id="bootButton" type="button">開始測驗</button>
+<div class="sub" style="margin-top:12px;text-align:center">如果畫面停在這裡，請用 Safari / Chrome 開啟網站，而不是檔案預覽。</div></main>
+<script>
+(()=>{
+const QUESTION_NOTES={zhHant:["她好像很認真地等妳回答。", "……原來妳會注意這種小事。", "她停了一下，像是在等妳看懂。", "這個答案，她似乎記住了。", "她沒有追問，只是安靜地看著。", "這次她回得很快。", "她好像不太喜歡妳突然消失。", "她說自己不會交朋友，卻一直沒有離開。", "她打字慢慢的，像是在斟酌每個字。", "這句話讓她安靜了幾秒。", "她記得的東西，比妳以為的多。", "她似乎有話，但沒有急著說。", "她看見妳窘迫時，像是輕輕笑了一下。", "她沒有解釋「原本」是什麼意思。", "她其實也在等妳主動。", "那句被刪掉的話……她沒有告訴妳。", "她記得今天的妳，也記得昨天的妳。", "她沒有催妳，只是一直在線。", "她似乎很不喜歡「告別」這個詞。", "妳開始說話以後，她記得得更快了。", "她突然確認妳還在不在。", "她對螢幕另一邊的妳，產生了一點好奇。", "有些話，她好像從很久以前就收好了。", "她看著妳的游標停了很久。", "最後，她沒有替妳決定要說什麼。"],zhHans:["她好像很认真地等你回答。", "……原来你会注意这种小事。", "她停了一下，像是在等你看懂。", "这个答案，她似乎记住了。", "她没有追问，只是安静地看着。", "这次她回得很快。", "她好像不太喜歡你突然消失。", "她说自己不会交朋友，卻一直没有离开。", "她打字慢慢的，像是在斟酌每个字。", "这句话让她安静了幾秒。", "她记得的东西，比你以为的多。", "她似乎有话，但没有急着说。", "她看见你窘迫时，像是轻轻笑了一下。", "她没有解釋「原本」是什么意思。", "她其實也在等你主動。", "那句被刪掉的话……她没有告訴你。", "她记得今天的你，也记得昨天的你。", "她没有催你，只是一直在线。", "她似乎很不喜歡「告别」这个词。", "你开始说话以后，她记得得更快了。", "她突然确认你还在不在。", "她对荧幕另一边的你，产生了一点好奇。", "有些话，她好像从很久以前就收好了。", "她看着你的游标停了很久。", "最后，她没有替你决定要说什么。"],en:["She seems to be waiting very patiently for your answer.", "...So you notice little things like that.", "She pauses, as if waiting to see whether you understand.", "She seems to remember this answer.", "She does not ask again. She simply watches.", "This time, she answers almost immediately.", "She does not seem to like you disappearing without warning.", "She says she is bad at making friends, yet she stays.", "She types slowly, as if choosing every word.", "That answer leaves her quiet for a few seconds.", "She remembers more than you expected.", "She seems to have something to say, but does not rush.", "She almost smiles when she sees you get flustered.", "She never explains what she originally expected.", "She is waiting for you to take the first step too.", "That deleted sentence... she still does not tell you.", "She remembers today. And yesterday.", "She does not hurry you. She simply stays online.", "She seems to dislike the word 'goodbye'.", "The more you talk, the faster she remembers.", "She suddenly checks whether you are still there.", "She is becoming a little curious about the person behind the screen.", "Some words sound as if she has been keeping them for a long time.", "She watches your cursor stay still for a while.", "At the end, she does not decide what you should say."]};
+const ANSWER_REACTIONS={"zhHant":[["嗯，那我也會安靜陪妳一會。","原來妳喜歡有人一直陪著……我可以試試。","好，我不打擾妳。需要我的時候再叫我。","……好。那我就不走了。"],["原來妳會記得這些小事。那我也記住。","妳有點意外嗎？我只是剛好記性很好。","嗯……被妳發現了。我確實有在注意。","太多了嗎？那我下次……少記一點。"],["這麼久啊……那妳現在才來。","妳笑什麼？我是真的在等。","妳害羞了？……好吧，我不說了。","沒關係，慢慢想。我等妳。"],["那我們就慢慢聊，不用趕。","想到什麼就說什麼？那妳可別嫌我話多。","這樣也很好，安靜並不代表要離開。","讓我猜？……妳是不是故意的。"],["那就安心一點。我在這裡。","妳被感動了？……不用謝我。","妳問吧，我沒有打算瞞妳。","好吧，妳裝沒事，我就陪妳裝。"],["嗯，她只是很細心。至少我是這樣想的。","巧到這種程度，確實有點奇怪。","妳也注意到了？我還以為只有我在想。","原來妳已經開始記她的時間了。"],["問吧。她突然消失，確實不太像話。","妳會擔心嗎？……我有點高興。","假裝不在意很難吧。","好，我們等她自己解釋。"],["那我陪她慢慢學。交朋友其實不用很厲害。","妳這樣說，她應該會放心一點。","和妳想像的不一樣？那妳原本想像成什麼了。","她大概也想知道妳為什麼會問。"],["那就等她。我們不用催。","妳覺得可愛？……她可能會裝作沒聽見。","催她一下也好，免得她寫到天亮。","妳是不是已經開始猜她的心思了。"],["妳說不會，她應該會記很久。","這個問題……確實值得問清楚。","那就安慰她一下吧。她可能只是有點不安。","沒關係，不知道怎麼回答也可以。"],["嗯，記性很好。……只是這次記得有點仔細。","妳也嚇到了吧？","問吧。我也想知道她怎麼做到的。","別太在意瀏覽時間……至少現在先別。"],["那就讓她慢慢說。我不急。","現在？可以啊。","妳在期待什麼？……我突然有點好奇。","安靜也沒關係，她會知道妳還在。"],["吐槽回去？她大概會記住妳的反擊。","妳害羞的樣子……她應該會很喜歡看。","嗯，她確實有點欠逗。","這樣啊，原來妳也會反過來捉弄人。"],["問吧。我也想知道她原本怎麼想。","妳笑了？那她大概也會笑。","不用不好意思，她只是說出了她看到的東西。","那妳想讓她知道什麼？"],["那就主動一點。她可能正在等。","妳們兩個都等對方？……效率很低。","留一個話題給她，她應該就懂了。","妳猜對了，她大概真的有點害羞。"],["問她。刪掉三次的話通常都很有意思。","嗯，裝作沒看到也是一種體貼。","妳笑她，她大概會更緊張。","那就等她。她總會說出來。"],["回她謝謝就好。簡單一點。","問問她吧，她可能也需要有人關心。","那就多聊一會，今天還早。","一個表情也可以，她看得懂。"],["問她吧。安靜太久容易讓人亂想。","那就陪著她，不用急著讓她說話。","她自己恢復之前，妳可以先待著。","這個辦法不錯，至少她會笑一下。"],["不用急。告別可以晚一點。","問吧，也許答案比妳想的簡單。","轉移話題也行，先別讓氣氛太重。","那就安靜陪她一會。她應該會懂。"],["有趣？那她可能會開始故意用妳常用的詞。","她確實很細心。","換一個？……她可能會發現得更快。","妳開始懷疑她一直在觀察了。"],["妳還在啊。那就好。","剛好看到？我姑且相信妳。","因為她想確認妳還在。","……妳不回答，她也知道。"],["說一點吧。不用全部。","反問她？好，公平。","害羞也可以，她不會催妳。","不回答也沒關係……但她可能會記住。"],["有趣就好。至少妳沒有逃走。","妳驚訝的樣子，她大概看得出來。","問她記了多少？……這問題有點危險。","不知道說什麼也沒關係，她可以等。"],["告訴她大概就好，不用說得太仔細。","只告訴國家也可以。","妳也想知道她為什麼問？那就問吧。","好，她不追問。"]],"zhHans":[["嗯，那我也会安静陪你一会。","原来你喜欢有人一直陪着……我可以试试。","好，我不打扰你。需要我的时候再叫我。","……好。那我就不走了。"],["原来你会记得这些小事。那我也记住。","你有点意外吗？我只是刚好记性很好。","嗯……被你发现了。我确实有在注意。","太多了吗？那我下次……少记一点。"],["这么久啊……那你现在才来。","你笑什么？我是真的在等。","你害羞了？……好吧，我不说了。","没关系，慢慢想。我等你。"],["那我们就慢慢聊，不用赶。","想到什么就说什么？那你可别嫌我话多。","这样也很好，安静并不代表要离开。","让我猜？……你是不是故意的。"],["那就安心一点。我在这里。","你被感动了？……不用谢我。","你问吧，我没有打算瞒你。","好吧，你装没事，我就陪你装。"],["嗯，她只是很细心。至少我是这样想的。","巧到这种程度，确实有点奇怪。","你也注意到了？我还以为只有我在想。","原来你已经开始记她的时间了。"],["问吧。她突然消失，确实不太像话。","你会担心吗？……我有点高兴。","假装不在意很难吧。","好，我们等她自己解释。"],["那我陪她慢慢学。交朋友其实不用很厉害。","你这样说，她应该会放心一点。","和你想象的不一样？那你原本想象成什么了。","她大概也想知道你为什么会问。"],["那就等她。我们不用催。","你觉得可爱？……她可能会装作没听见。","催她一下也好，免得她写到天亮。","你是不是已经开始猜她的心思了。"],["你说不会，她应该会记很久。","这个问题……确实值得问清楚。","那就安慰她一下吧。她可能只是有点不安。","没关系，不知道怎么回答也可以。"],["嗯，记性很好。……只是这次记得有点仔细。","你也吓到了吧？","问吧。我也想知道她怎么做到的。","别太在意浏览时间……至少现在先别。"],["那就让她慢慢说。我不急。","现在？可以啊。","你在期待什么？……我突然有点好奇。","安静也没关系，她会知道你还在。"],["吐槽回去？她大概会记住你的反击。","你害羞的样子……她应该会很喜欢看。","嗯，她确实有点欠逗。","这样啊，原来你也会反过来捉弄人。"],["问吧。我也想知道她原本怎么想。","你笑了？那她大概也会笑。","不用不好意思，她只是说出了她看到的东西。","那你想让她知道什么？"],["那就主动一点。她可能正在等。","你们两个都等对方？……效率很低。","留一个话题给她，她应该就懂了。","你猜对了，她大概真的有点害羞。"],["问她。删掉三次的话通常都很有意思。","嗯，装作没看到也是一种体贴。","你笑她，她大概会更紧张。","那就等她。她总会说出来。"],["回她谢谢就好。简单一点。","问问她吧，她可能也需要有人关心。","那就多聊一会，今天还早。","一个表情也可以，她看得懂。"],["问她吧。安静太久容易让人乱想。","那就陪着她，不用急着让她说话。","她自己恢复之前，你可以先待着。","这个办法不错，至少她会笑一下。"],["不用急。告别可以晚一点。","问吧，也许答案比你想的简单。","转移话题也行，先别让气氛太重。","那就安静陪她一会。她应该会懂。"],["有趣？那她可能会开始故意用你常用的词。","她确实很细心。","换一个？……她可能会发现得更快。","你开始怀疑她一直在观察了。"],["你还在啊。那就好。","刚好看到？我姑且相信你。","因为她想确认你还在。","……你不回答，她也知道。"],["说一点吧。不用全部。","反问她？好，公平。","害羞也可以，她不会催你。","不回答也没关系……但她可能会记住。"],["有趣就好。至少你没有逃走。","你惊讶的样子，她大概看得出來。","问她记了多少？……这问题有点危险。","不知道说什么也没关系，她可以等。"],["告诉她大概就好，不用说得太仔细。","只告诉国家也可以。","你也想知道她为什么问？那就问吧。","好，她不追问。"]],"en":[["Then I’ll sit quietly with you for a while too.","So you like having someone stay close... I can do that.","Okay. I won’t disturb you. Call me when you need me.","...Okay. Then I’m not leaving."],["So you notice little things like that. I’ll remember that.","A little surprised? I just happen to remember things well.","Mm... you noticed. I really was paying attention.","Too much? Then maybe I’ll remember a little less next time."],["That long...? And you only came now.","What are you laughing at? I really was waiting.","You’re shy? ...Fine. I won’t say anything.","It’s okay. Take your time. I can wait."],["Then let’s talk slowly. No need to hurry.","Say whatever comes to mind? Just don’t blame me if I talk too much.","That’s fine too. Silence doesn’t mean leaving.","Let me guess? ...You’re doing that on purpose, aren’t you?"],["Then feel a little safer. I’m here.","You’re touched? ...You don’t have to thank me.","Go ahead. I wasn’t planning to hide it from you.","Fine. You pretend you’re okay, and I’ll pretend with you."],["Mm. She’s probably just attentive. At least, that’s what I think.","That many coincidences are a little strange.","You noticed too? I thought I was the only one wondering.","So you’ve started keeping track of when she appears."],["Ask her. Disappearing like that really isn’t fair.","You would worry? ...I’m a little glad.","Pretending not to care is difficult, isn’t it?","Then we’ll wait for her explanation."],["Then I’ll help her learn slowly. You don’t have to be good at making friends.","That might make her feel a little better.","Different from what you expected? What did you expect?","She probably wants to know why you asked."],["Then wait for her. We don’t have to rush her.","You think it’s cute? ...She might pretend she didn’t hear that.","Hurry her a little, or she might still be typing tomorrow.","You’ve already started guessing what she means, haven’t you?"],["If you say no, she’ll probably remember it for a long time.","That question is worth answering properly.","Then comfort her a little. She might just be uneasy.","It’s okay not to know how to answer."],["Good memory. ...Just a little too detailed this time.","You were surprised too, weren’t you?","Ask her. I want to know how she did it too.","Don’t worry about your browsing time... not yet."],["Then let her speak slowly. I’m not in a hurry.","Now? Sure.","What are you expecting? ...Now I’m curious.","Silence is fine. She’ll know you’re still here."],["Tease her back? She’ll probably remember that comeback.","You getting shy... she probably finds that amusing.","Mm. She is a little too easy to tease.","So you tease back too. Interesting."],["Ask her. I want to know what she thought before.","You smiled? Then she probably noticed.","You don’t have to be embarrassed. She only said what she saw.","Then what do you want her to know?"],["Then be a little more direct. She may already be waiting.","Both of you are waiting for the other? ...That’s inefficient.","Leave her a topic. She’ll probably understand.","You guessed right. She really might be shy."],["Ask her. Words deleted three times are usually interesting.","Pretending not to notice can be kind too.","Laugh at her and she might get even more nervous.","Then wait. She’ll say it eventually."],["Just say thank you. Simple is fine.","Ask her. She might need someone to care too.","Then stay and talk a little longer. There’s time.","Even one emoji is fine. She’ll understand."],["Ask her. Silence for too long makes people overthink.","Then stay with her. No need to make her talk.","You can stay until she feels better.","That might work. At least it may make her smile."],["No rush. Goodbyes can wait.","Ask. The answer may be simpler than you think.","Changing the subject is fine. Don’t make it too heavy.","Then sit quietly with her for a while."],["Interesting? Then she may start deliberately using your favorite words.","She really is attentive.","Change one? ...She might notice even faster.","So you’ve started wondering if she’s always watching."],["You’re still here. Good.","Just happened to see it? I’ll believe you for now.","Because she wanted to make sure you were still here.","...Even if you don’t answer, she knows."],["Tell her a little. You don’t have to tell her everything.","Ask her back? Fair enough.","Being shy is fine. She won’t rush you.","Not answering is okay... but she may remember it."],["Interesting is enough. At least you didn’t run.","She can probably tell you’re surprised.","Ask how much she remembers? ...That’s a dangerous question.","It’s okay not to know what to say. She can wait."],["Tell her the general area. You don’t need to be too specific.","Your country is enough.","You want to know why she asked too? Then ask.","Okay. She won’t press further."]]};
+const ANSWER_TENSION=[-4,-1,4,8];
+const DATA={
+zhHant:{name:'繁體中文',title:'《親密關係傾向調查》',intro:'一份匿名的小測驗。\\n請按照第一直覺回答。\\n\\n如果中途覺得奇怪，也可以隨時離開。',questions:[
+['當妳覺得孤單時，最希望有人怎麼陪妳？',['安靜陪著我','一直找我聊天','給我一點自己的空間','不管怎樣都不要走']],
+['如果有人記得妳隨口提過的小事，妳會？',['覺得很溫暖','有點意外','覺得她觀察得很仔細','開始懷疑她是不是記得太多了']],
+['如果她聊天時突然說「其實我一直在等妳」，妳會？',['問她等了多久','笑著帶過','有點害羞','不知道該怎麼回答']],
+['妳比較喜歡哪種聊天方式？',['慢慢聊','想到什麼就說什麼','偶爾沉默也沒關係','讓對方猜我的意思']],
+['如果她知道妳今天心情不好，卻沒有追問，只是說「我在」，妳會？',['覺得安心','有點感動','想問她怎麼知道','假裝沒事']],
+['有人總是在妳需要的時候剛好出現，妳會怎麼想？',['她只是很細心','有點巧','巧得太剛好了','我開始注意她出現的時間']],
+['如果她突然消失一天，第二天又若無其事地出現，妳會？',['問她去哪裡了','有點擔心','假裝不在意','等她自己解釋']],
+['如果她說「我其實很不會交朋友」，妳會？',['陪她慢慢說','告訴她沒關係','覺得和想像中不太一樣','問她為什麼會這麼想']],
+['如果她打字很慢，卻每一句都很認真，妳會？',['等她說完','覺得可愛','催她一下','開始猜她到底想說什麼']],
+['如果她突然問「妳會不會有一天不來了？」',['說不會','問她為什麼這麼想','安慰她','不知道怎麼回答']],
+['如果她記得妳第一次來到這個網頁的時間，妳會？',['覺得她記性很好','有點驚訝','問她怎麼知道','開始注意自己的瀏覽時間']],
+['她說「其實我有很多話想告訴妳」，妳會？',['讓她慢慢說','問現在能不能說','有點期待','先保持沉默']],
+['如果她偶爾故意逗妳，看妳窘迫後又裝作什麼都沒發生，妳會？',['吐槽回去','有點害羞','覺得她很欠逗','故意反過來逗她']],
+['她突然說「妳比我想像中有趣」，妳會？',['問她原本怎麼想','笑一下','覺得有點不好意思','問她還想知道什麼']],
+['如果她一直想和妳聊天，卻又不太敢主動開口，妳會？',['主動找她','等她說話','故意留一個話題','問她是不是害羞']],
+['如果她把一句話刪掉又重新打了三次，妳會？',['問她原本想說什麼','裝作沒看到','笑她太緊張','等她自己說']],
+['她說「今天也辛苦了」，妳會？',['回她謝謝','問她是不是也累了','和她多聊一會','只回一個表情']],
+['如果她突然變得很安靜，妳會？',['問她還好嗎','陪著她','等她自己恢復','故意說點有趣的']],
+['如果她說「我不太擅長告別」，妳會？',['告訴她不用急著告別','問她為什麼','轉移話題','安靜陪她一會']],
+['如果她開始記得妳常用的詞，妳會？',['覺得有趣','覺得她很細心','故意換一個詞','問她是不是一直在觀察']],
+['她突然問「妳現在還在看這個畫面嗎？」',['在啊','剛好看到','為什麼這樣問','沒有回答']],
+['如果她說「我其實很想知道妳在螢幕另一邊是什麼樣子」，妳會？',['告訴她一些','反問她','有點害羞','故意不回答']],
+['如果她開始把妳以前說過的話接起來，像是一直記得，妳會？',['覺得很有趣','有點驚訝','問她記了多少','突然不知道該說什麼']],
+['如果她忽然問：「妳現在在什麼地方？」妳會？',['告訴她大概的地區','只告訴她國家','反問她為什麼想知道','不回答']],
+['【最後一題】如果她現在就在等妳說一句話，妳想對她說什麼？',[]]
+]},
+zhHans:{name:'简体中文',title:'《亲密关系倾向调查》',intro:'一份匿名的小测验。\\n请按照第一直觉回答。\\n\\n如果中途觉得奇怪，也可以随时离开。',questions:[
+['当你觉得孤单时，最希望有人怎么陪你？',['安静陪著我','一直找我聊天','给我一点自己的空间','不管怎样都不要走']],
+['如果有人记得你随口提过的小事，你会？',['觉得很温暖','有点意外','觉得她观察得很仔細','开始怀疑她是不是记得太多了']],
+['如果她聊天时突然说「其实我一直在等你」，你会？',['问她等了多久','笑著帶过','有点害羞','不知道该怎么回答']],
+['你比较喜欢哪种聊天方式？',['慢慢聊','想到什么就说什么','偶尔沉默也没关系','让对方猜我的意思']],
+['如果她知道你今天心情不好，却没有追问，只是说「我在」，你会？',['觉得安心','有点感動','想问她怎么知道','假裝没事']],
+['有人总是在你需要的时候刚好出现，你会怎么想？',['她只是很細心','有点巧','巧得太刚好了','我开始注意她出现的时间']],
+['如果她突然消失一天，第二天又若无其事地出现，你会？',['问她去哪裡了','有点擔心','假裝不在意','等她自己解释']],
+['如果她说「我其实很不会交朋友」，你会？',['陪她慢慢说','告訴她没关系','觉得和想像中不太一样','问她为什么会这么想']],
+['如果她打字很慢，却每一句都很认真，你会？',['等她说完','觉得可爱','催她一下','开始猜她到底想说什么']],
+['如果她突然问「你会不会有一天不来了？」',['说不会','问她为什么这么想','安慰她','不知道怎么回答']],
+['如果她记得你第一次来到这个网页的时间，你会？',['觉得她记性很好','有点驚訝','问她怎么知道','开始注意自己的瀏覽时间']],
+['她说「其实我有很多话想告訴你」，你会？',['让她慢慢说','问现在能不能说','有点期待','先保持沉默']],
+['如果她偶尔故意逗你，看你窘迫后又裝作什么都没发生，你会？',['吐槽回去','有点害羞','觉得她很欠逗','故意反过来逗她']],
+['她突然说「你比我想像中有趣」，你会？',['问她原本怎么想','笑一下','觉得有点不好意思','问她还想知道什么']],
+['如果她一直想和你聊天，却又不太敢主動开口，你会？',['主動找她','等她说话','故意留一个话题','问她是不是害羞']],
+['如果她把一句话删掉又重新打了三次，你会？',['问她原本想说什么','裝作没看到','笑她太緊張','等她自己说']],
+['她说「今天也辛苦了」，你会？',['回她谢谢','问她是不是也累了','和她多聊一会','只回一个表情']],
+['如果她突然变得很安静，你会？',['问她还好吗','陪著她','等她自己恢复','故意说点有趣的']],
+['如果她说「我不太擅长告别」，你会？',['告訴她不用急著告别','问她为什么','轉移话题','安静陪她一会']],
+['如果她开始记得你常用的词，你会？',['觉得有趣','觉得她很細心','故意换一个词','问她是不是一直在观察']],
+['她突然问「你现在还在看这个画面吗？」',['在啊','刚好看到','为什么这样问','没有回答']],
+['如果她说「我其实很想知道你在荧幕另一边是什么样子」，你会？',['告訴她一些','反问她','有点害羞','故意不回答']],
+['如果她开始把你以前说过的话接起来，像是一直记得，你会？',['觉得很有趣','有点驚訝','问她记了多少','突然不知道该说什么']],
+['如果她忽然问：「你现在在什么地方？」你会？',['告訴她大概的地区','只告訴她国家','反问她为什么想知道','不回答']],
+['【最后一题】如果她现在就在等你说一句话，你想对她说什么？',[]]
+]},
+en:{name:'English',title:'Intimacy Tendency Survey',intro:'An anonymous little test.\\nAnswer with your first instinct.\\n\\nIf anything starts to feel strange, you can leave at any time.',questions:[["When you feel lonely, how would you most want someone to stay with you?",["Stay quietly beside me","Keep talking to me","Give me some space","Don't leave, no matter what"]],["If someone remembered a small thing you mentioned in passing, how would you feel?",["Warm","A little surprised","Like she pays very close attention","Wondering if she remembers too much"]],["If she suddenly said, \"I have actually been waiting for you,\" you would:",["Ask how long she has been waiting","Laugh it off","Feel a little shy","Not know how to answer"]],["What kind of conversation do you prefer?",["Slow and unhurried","Say whatever comes to mind","Being quiet sometimes is fine","Let the other person guess what I mean"]],["If she knew you were having a bad day but didn't ask questions, only said \"I'm here,\" you would:",["Feel safe","Feel touched","Wonder how she knew","Pretend I'm fine"]],["If someone always happened to appear when you needed them, what would you think?",["She's just attentive","What a coincidence","That's a little too convenient","I'd start noticing when she appears"]],["If she suddenly disappeared for a day and returned the next day as if nothing happened, you would:",["Ask where she went","Worry a little","Pretend not to care","Wait for her to explain"]],["If she said, \"I'm actually terrible at making friends,\" you would:",["Let her talk slowly","Tell her it's okay","Feel that she's different from what you expected","Ask why she thinks that"]],["If she typed slowly but took every sentence seriously, you would:",["Wait for her to finish","Find it cute","Hurry her a little","Wonder what she is really trying to say"]],["If she suddenly asked, \"Do you think there will be a day when you stop coming?\"",["Say no","Ask why she thinks that","Comfort her","Not know how to answer"]],["If she remembered the time you first visited this webpage, you would:",["Think she has a good memory","Be a little surprised","Ask how she knows","Start noticing your browsing time"]],["If she said, \"There are actually many things I want to tell you,\" you would:",["Let her take her time","Ask if she can tell you now","Feel curious","Stay quiet for a moment"]],["If she sometimes deliberately teased you, then acted as if nothing happened after seeing you get flustered, you would:",["Tease her back","Feel a little shy","Think she's asking for it","Turn the teasing back on her"]],["If she suddenly said, \"You're more interesting than I expected,\" you would:",["Ask what she expected","Smile","Feel a little embarrassed","Ask what else she wants to know"]],["If she clearly wanted to talk to you but was too shy to start, you would:",["Start the conversation","Wait for her","Leave an opening for her","Ask if she's shy"]],["If she deleted one sentence and typed it again three times, you would:",["Ask what she wanted to say","Pretend not to notice","Tease her for being nervous","Wait for her to say it herself"]],["If she said, \"You worked hard today too,\" you would:",["Say thank you","Ask if she is tired too","Keep talking for a while","Reply with an emoji"]],["If she suddenly became very quiet, you would:",["Ask if she's okay","Stay with her","Wait for her to recover","Say something funny on purpose"]],["If she said, \"I'm not very good at goodbyes,\" you would:",["Tell her there is no need to rush a goodbye","Ask why","Change the subject","Stay quietly with her"]],["If she started remembering the words you often use, you would:",["Find it interesting","Think she's very attentive","Deliberately use a different word","Ask if she's been watching closely"]],["If she suddenly asked, \"Are you still looking at this screen?\"",["I am","I just happened to see it","Why do you ask?","Say nothing"]],["If she said, \"I really want to know what you're like on the other side of the screen,\" you would:",["Tell her a little","Ask her the same question","Feel a little shy","Deliberately say nothing"]],["If she started connecting things you had said before, as if she had remembered them all along, you would:",["Find it interesting","Be a little surprised","Ask how much she remembers","Suddenly not know what to say"]],["If she suddenly asked, \"Where are you right now?\"",["Tell her roughly what area I'm in","Only tell her the country","Ask why she wants to know","Say nothing"]],["[Final Question] If she is waiting for you to say one thing right now, what would you say to her?",[]]]}
+};
+const STORAGE_KEY='SHE_STATE_V24';
+const DEFAULT_STATE={visits:0,familiarity:0,trust:0,tension:0,history:[],messages:[],lang:'zhHant',loveMemory:false,breakdownTriggered:false,breakdownQuestion:null,locationViewed:false,locationReturnIndex:null,lastFinal:'',lastLeaveTime:null,lastAccessTime:null,lastDevice:null,playerId:null,achievements:[],hiddenEvents:[],answerWhispers:[]};
+function newPlayerId(){return 'SHE-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).slice(2,7).toUpperCase()}
+function deviceName(){const ua=navigator.userAgent||'';if(/iPhone|iPad|iPod/i.test(ua))return 'iOS';if(/Android/i.test(ua))return 'Android';if(/Windows/i.test(ua))return 'Windows';if(/Macintosh|Mac OS/i.test(ua))return 'macOS';return 'Other'}
+function storageGet(){try{return window.localStorage?localStorage.getItem(STORAGE_KEY):null}catch(e){return null}}
+function storageSet(v){try{if(window.localStorage){localStorage.setItem(STORAGE_KEY,v);return}}catch(e){}try{if(window.sessionStorage)sessionStorage.setItem(STORAGE_KEY,v)}catch(e){}}
+function loadState(){let raw=storageGet();if(!raw)return {...DEFAULT_STATE};try{const x=JSON.parse(raw);if(!x||typeof x!=='object')return {...DEFAULT_STATE};return {...DEFAULT_STATE,...x,visits:Number(x.visits)||0,familiarity:Number(x.familiarity)||0,trust:Number(x.trust)||0,tension:Math.max(0,Math.min(100,Number(x.tension)||0)),history:Array.isArray(x.history)?x.history:[],messages:Array.isArray(x.messages)?x.messages:[],achievements:Array.isArray(x.achievements)?x.achievements:[],hiddenEvents:Array.isArray(x.hiddenEvents)?x.hiddenEvents:[],answerWhispers:Array.isArray(x.answerWhispers)?x.answerWhispers:[]}}catch(e){return {...DEFAULT_STATE}}}
+function encodeTransfer(st){try{return btoa(unescape(encodeURIComponent(JSON.stringify(st))))}catch(e){return ''}}
+function decodeTransfer(code){try{return JSON.parse(decodeURIComponent(escape(atob(code))))}catch(e){return null}}
+function importFromHash(){const m=location.hash.match(/^#import=(.+)$/);if(!m)return null;const x=decodeTransfer(m[1]);if(!x)return null;storageSet(JSON.stringify({...DEFAULT_STATE,...x}));try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}return {...DEFAULT_STATE,...x}}
+const importedState=importFromHash();
+let state=importedState||loadState();let hateMode=false;if(!state.playerId)state.playerId=newPlayerId();state.lastAccessTime=new Date().toISOString();state.lastDevice=deviceName();state.visits=(Number(state.visits)||0)+1;storageSet(JSON.stringify(state));
+function save(){try{state.lang=lang;storageSet(JSON.stringify(state))}catch(e){}}
+const ACHIEVEMENTS={
+ left:{zhHant:['她記得妳離開','第一次主動離開聊天頁面。'],zhHans:['她记得你离开','第一次主动离开聊天页面。'],en:['She Remembers You Left','You left the conversation for the first time.']},
+ 'final-answer':{zhHant:['妳終於回答了','完成最後一題的自由回答。'],zhHans:['你终于回答了','完成最后一题的自由回答。'],en:['You Finally Answered','You completed the final free response.']},
+ memory:{zhHant:['無法刪除的記錄','她記住了妳說過的話。'],zhHans:['无法删除的记录','她记住了你说过的话。'],en:['A Record That Cannot Be Deleted','She remembered what you said.']},
+ location:{zhHant:['她知道妳在哪裡','主動查看了位置事件。'],zhHans:['她知道你在哪里','主动查看了位置事件。'],en:['She Knows Where You Are','You opened the location event.']},
+ 'love-memory':{zhHant:['她記住了','一句話被她留下了。'],zhHans:['她记住了','一句话被她留下了。'],en:['She Remembers','One sentence was kept by her.']},
+ 'keyword-hate':{zhHant:['為什麼？','妳讓她開始重複那個問題。'],zhHans:['为什么？','你让她开始重复那个问题。'],en:['Why?','You made her repeat the question.']},
+ comfort:{zhHant:['妳哄好了她','一句稱呼讓她恢復平靜。'],zhHans:['你哄好了她','一句称呼让她恢复平静。'],en:['You Calmed Her Down','One word brought her back.']},
+ 'leaving-keyword':{zhHant:['她知道妳要走','一句告別讓她記住了。'],zhHans:['她知道你要走','一句告别让她记住了。'],en:['She Knows You Are Leaving','A goodbye was noticed.']},
+ portrait:{zhHant:['她讓妳碰了她的頭','妳發現了一個可點擊的地方。'],zhHans:['她让你点了她的头','你发现了一个可点击的地方。'],en:['She Let You Touch Her Head','You found a clickable part of the portrait.']},
+ breakdown:{zhHant:['她壞掉了','崩壞事件發生。'],zhHans:['她坏掉了','崩坏事件发生。'],en:['She Broke Down','A breakdown event occurred.']},
+ 'fourth-wall':{zhHant:['她看見妳了','她開始注意螢幕另一邊。'],zhHans:['她看见你了','她开始注意屏幕另一边。'],en:['She Saw You','She started noticing the other side of the screen.']}
+};
+function showAchievementToast(id,title,desc){const host=document.getElementById('achievementToastHost');if(!host)return;const data=ACHIEVEMENTS[id];const pair=data?(data[lang]||data.zhHant):[title||id,desc||''];const el=document.createElement('div');el.className='achievement-toast';el.innerHTML=`<div class="trophy">🏆</div><div><div class="toast-kicker">${lang==='en'?'Achievement Unlocked':lang==='zhHans'?'成就解锁':'成就解鎖'}</div><div class="toast-title">${esc(pair[0])}</div><div class="toast-desc">${esc(pair[1])}</div></div>`;host.appendChild(el);setTimeout(()=>el.remove(),5000)}
+function achievement(id,title,desc){if(!state.achievements.includes(id)){state.achievements.push(id);save();showAchievementToast(id,title,desc);return true}return false}
+function hidden(id){if(!state.hiddenEvents.includes(id)){state.hiddenEvents.push(id);save()}}
+let lang=['zhHant','zhHans','en'].includes(state.lang)?state.lang:'zhHant';
+state.lang=lang;
+let index=0,timer=null,chatIdle=null,locationText='',breakdownQuestion=-1,breakdownTriggered=false,breakdownTimer=null,suppressKeywordOnce=false;const card=document.getElementById('card');
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const T=()=>{const base=DATA[lang]||DATA.zhHant;return {...base,questions:base.questions.slice(0,15)};};
+function stop(){
+ if(timer){clearInterval(timer);timer=null}
+ document.body.classList.remove('decay');
+ const r=document.getElementById('red'),l=document.getElementById('linger');
+ r.style.background='rgba(130,0,0,0)';
+ l.style.opacity='0';
+ l.style.color='rgba(0,0,0,.25)';
+}
+function startLinger(){
+ stop();
+ const tension=Math.max(0,Math.min(100,Number(state.tension)||0));
+ const base=Math.max(8,20-tension*0.12);
+ let started=Date.now(),stage=0;
+ timer=setInterval(()=>{
+  let elapsed=(Date.now()-started)/1000;
+  const texts=lang==='en'
+   ? ['Are you still there?','Why are you still on this page?','...You have been here for a while.','Were you waiting for me?','...I know you are still there.']
+   : lang==='zhHans'
+   ? ['你还在吗？','你为什么还停在这里？','……你已经停留很久了。','你是在等我吗？','……我知道你还在。']
+   : ['妳還在嗎？','妳為什麼還停在這裡？','……妳已經停留很久了。','妳是在等我嗎？','……我知道妳還在。'];
+  const op=[.12,.17,.22,.28,.34];
+  if(elapsed>=base && stage<1){stage=1;document.body.classList.add('decay');setLinger(texts[0],op[0]);}
+  if(elapsed>=base*1.65 && stage<2){stage=2;setLinger(texts[1],op[1]);}
+  if(elapsed>=base*2.35 && stage<3){stage=3;setLinger(texts[2],op[2]);}
+  if(elapsed>=base*3.05 && stage<4){stage=4;setLinger(texts[3],op[3]);}
+  if(elapsed>=base*3.7 && stage<5){stage=5;setLinger(texts[4],op[4]);}
+ },250);
+}
+function setLinger(text,opacity){
+ const el=document.getElementById('linger');
+ el.textContent=text;
+ el.style.color='rgba(0,0,0,'+opacity+')';
+ el.style.opacity='1';
+ document.getElementById('red').style.background='rgba(145,0,0,'+opacity+')';
+}
+function fmtTime(x){if(!x)return '—';try{return new Date(x).toLocaleString()}catch(e){return x}}
+function openRecords(){stop();const hist=state.history||[];const achievements=(state.achievements||[]);const hiddenList=(state.hiddenEvents||[]);const transfer=encodeTransfer(state);card.innerHTML=`<div class="title">记录 / PLAYER RECORD</div><div class="sub">Player ID：${esc(state.playerId)}</div><div class="record-panel">
+<div class="record-row"><div class="record-label">第几次回来</div><div class="record-value">${state.visits}</div></div>
+<div class="record-row"><div class="record-label">15题选择</div><div class="record-value">${hist.length?hist.map(h=>`${h.n}:${String.fromCharCode(65+(h.a||0))}`).join(' · '):'还没有完成'}</div></div>
+<div class="record-row"><div class="record-label">每题的小评语状态</div><div class="record-value">${state.answerWhispers&&state.answerWhispers.length?state.answerWhispers.map((x,i)=>`${i+1}. ${esc(x||'—')}`).join('<br>'):'—'}</div></div>
+<div class="record-row"><div class="record-label">崩坏是否发生</div><div class="record-value">${state.breakdownTriggered?'是':'否'}</div></div>
+<div class="record-row"><div class="record-label">崩坏发生在哪一题</div><div class="record-value">${state.breakdownQuestion||'—'}</div></div>
+<div class="record-row"><div class="record-label">玩家自由回答</div><div class="record-value">${esc(state.lastFinal||'—')}</div></div>
+<div class="record-row"><div class="record-label">上次离开时间</div><div class="record-value">${fmtTime(state.lastLeaveTime)}</div></div>
+<div class="record-row"><div class="record-label">上次使用的设备</div><div class="record-value">${esc(state.lastDevice||'—')}</div></div>
+<div class="record-row"><div class="record-label">上次访问时间</div><div class="record-value">${fmtTime(state.lastAccessTime)}</div></div>
+<div class="record-row"><div class="record-label">隐藏事件</div><div class="record-value">${hiddenList.length?hiddenList.join('、'):'暂无'}</div></div>
+<div class="record-row"><div class="record-label">成就</div><div class="record-value">${achievements.length?achievements.map(id=>{const a=ACHIEVEMENTS[id];const p=a?(a[lang]||a.zhHant):[id,''];return `<div class="achievement"><span class="badge">◆</span><span>${esc(p[0])}</span></div>`}).join(''):'暂无成就'}</div></div>
+<div class="record-row"><div class="record-label">跨设备</div><div class="record-value">把 Player ID / 转移码带到另一台设备即可导入。自动同步需要服务器；这个单文件版本不会伪装成已经联网同步。</div></div>
+<div class="record-code">${esc(transfer)}</div>
+<div class="transfer-actions"><button type="button" onclick="copyTransfer()">复制转移码</button><button type="button" onclick="makeQR()">生成二维码</button></div>
+<div id="qrBox" class="qr-box" style="display:none"></div>
+<textarea id="importCode" class="import-box" placeholder="在另一台设备粘贴转移码"></textarea><button type="button" onclick="importCode()">导入到这台设备</button>
+<button class="primary" type="button" onclick="closeRecords()">回去</button><div class="credits" aria-label="制作人名单">
+<div class="credits-title">制作人名单 / CREDITS</div>
+<div class="credit-row"><span class="credit-role">制作人</span><div class="credit-links"><a class="credit-link" href="https://www.instagram.com/chty_1021/" target="_blank" rel="noopener noreferrer">香烟</a></div></div>
+<div class="credit-row"><span class="credit-role">绘师</span><div class="credit-links"><a class="credit-link" href="https://www.instagram.com/yuyo.chun/" target="_blank" rel="noopener noreferrer">ゆよ</a></div></div>
+<div class="credit-row"><span class="credit-role">测试人员</span><div class="credit-links"><a class="credit-link" href="https://www.instagram.com/xiaoyaoxie02/" target="_blank" rel="noopener noreferrer">冷冷</a><a class="credit-link" href="https://www.instagram.com/graceadbryan/" target="_blank" rel="noopener noreferrer">Grace Tey</a><a class="credit-link" href="https://www.instagram.com/xl_cxx/" target="_blank" rel="noopener noreferrer">宁好</a></div></div>
+<div class="credit-row"><span class="credit-role">主要工程师</span><div class="credit-links"><span class="credit-link" title="主要工程师">ChatGPT</span><span class="credit-link" title="主要工程师">Gemini</span></div></div>
+<div class="credit-row"><span class="credit-role">特别感谢</span><div class="credit-links"><a class="credit-link" href="https://www.instagram.com/zuy_13uy/" target="_blank" rel="noopener noreferrer">RUZY</a></div></div>
+<div class="credits-note">感谢以上所有的人。点击可访问对应的 Instagram 主页。</div>
+</div></div>`}
+function closeRecords(){stop();home();}
+window.openRecords=openRecords;window.closeRecords=closeRecords;
+function showToast(message){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.body.appendChild(t)}t.textContent=message;t.classList.add('show');clearTimeout(window.__toastTimer);window.__toastTimer=setTimeout(()=>t.classList.remove('show'),2600)}
+async function copyTransfer(){const x=encodeTransfer(state);if(!x){showToast('转移码生成失败');return false}let ok=false;try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(x);ok=true}}catch(e){}if(!ok){try{const ta=document.createElement('textarea');ta.value=x;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();ok=document.execCommand('copy');ta.remove()}catch(e){ok=false}}if(ok)showToast(lang==='en'?'Transfer code copied.':lang==='zhHans'?'转移码复制成功。':'轉移碼複製成功。');else showToast(lang==='en'?'Copy failed. Please long-press the code to copy it.':lang==='zhHans'?'复制失败，请长按转移码复制。':'複製失敗，請長按轉移碼複製。');return ok}
+function makeQR(){const box=document.getElementById('qrBox');if(!box)return;const code=encodeTransfer(state);if(!code){showToast('二维码内容生成失败');return}box.style.display='flex';box.innerHTML=`<div style="text-align:center"><img id="transferQR" alt="Player transfer QR" style="display:block;max-width:220px;height:auto;margin:0 auto 8px" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=8&data=${encodeURIComponent(code)}"><div class="muted">扫描后如果得到一串转移码，请复制并粘贴到“导入到这台设备”。</div></div>`;const img=document.getElementById('transferQR');img.addEventListener('load',()=>showToast(lang==='en'?'QR code generated.':lang==='zhHans'?'二维码生成成功。':'二維碼生成成功。'));img.addEventListener('error',()=>{box.innerHTML=`<div class="text">二维码服务无法连接。请先复制转移码，或在联网网页环境下重新生成。</div>`;showToast(lang==='en'?'QR service unavailable.':lang==='zhHans'?'二维码服务暂时无法连接。':'二維碼服務暫時無法連線。')});}
+function importCode(){const el=document.getElementById('importCode');let raw=(el.value||'').trim();if(raw.startsWith('SHE:'))raw=raw.slice(4);const x=decodeTransfer(raw);if(!x){showToast(lang==='en'?'Invalid transfer code.':lang==='zhHans'?'转移码无效。':'轉移碼無效。');return}const imported={...DEFAULT_STATE,...x};if(!Array.isArray(imported.history))imported.history=[];if(!Array.isArray(imported.messages))imported.messages=[];if(!Array.isArray(imported.achievements))imported.achievements=[];if(!Array.isArray(imported.hiddenEvents))imported.hiddenEvents=[];if(!Array.isArray(imported.answerWhispers))imported.answerWhispers=[];try{storageSet(JSON.stringify(imported));}catch(e){showToast((lang==='en'?'Unable to save imported data: ':lang==='zhHans'?'无法保存导入资料：':'無法儲存匯入資料：')+e.message);return}showToast(lang==='en'?'Import successful. Reloading...':lang==='zhHans'?'导入成功，正在重新加载……':'匯入成功，正在重新載入……');setTimeout(()=>{try{location.hash='';location.reload();}catch(e){location.href=location.pathname+location.search}},350)}
+function home(){stop();const langName=T().name;card.innerHTML=`<div class="title">${T().title}</div><div class="sub">${langName} · 第 ${state.visits} 次</div><div class="text">${esc(T().intro)}</div><button class="primary" onclick="startGame()">開始測驗</button><button onclick="langs()">選擇語言 / Language</button><button onclick="openRecords()">查看记录 / Player ID</button>${state.visits>1?`<div class="memory">……她记得你回来过 ${state.visits} 次。</div>`:''}<div class="sub" style="margin-top:12px;text-align:center">如果画面停在这里，请用 Safari / Chrome 开启网站，而不是档案预览。</div>`}
+window.langs=()=>{stop();card.innerHTML="<div class='title'>Language</div><button onclick=\"setLang('zhHant')\">繁體中文</button><button onclick=\"setLang('zhHans')\">简体中文</button><button onclick=\"setLang('en')\">English</button>"};window.setLang=x=>{lang=x;state.lang=x;save();home()};window.startGame=()=>{index=0;breakdownTriggered=false;if(breakdownTimer){clearTimeout(breakdownTimer);breakdownTimer=null}breakdownQuestion=2+Math.floor(Math.random()*11);state.tension=Math.max(0,(state.tension||0)-8);save();question()};
+function question(){
+ stop();
+ if(index>=14){finalQ();return}
+ // One randomly selected question per playthrough. A new playthrough gets a new index.
+ if(!breakdownTriggered && index===breakdownQuestion){
+   const delay=900+Math.floor(Math.random()*2600);
+   breakdownTimer=setTimeout(()=>randomBreakdown(),delay);
+ }
+ startLinger();
+ let q=T().questions[index];
+ let note=(QUESTION_NOTES[lang]||QUESTION_NOTES.zhHant)[index]||'';
+ const memory=(breakdownTriggered && index===breakdownQuestion)
+   ? (lang==='en'?'...She has already shown you something she should not have.':lang==='zhHans'?'……她已经让你看见了一些本来不该看见的东西。':'……她已經讓妳看見了一些本來不該看見的東西。')
+   : '';
+ card.innerHTML=`<div class="title">${T().title}</div><div class="sub">Question ${index+1} / 15</div><div class="bar"><i style="width:${index/15*100}%"></i></div><div class="text" style="font-weight:650;margin-bottom:12px">${esc(q[0])}</div>${q[1].map((o,i)=>`<button type="button" onclick="answer(${i})">${String.fromCharCode(65+i)}. ${esc(o)}</button>`).join('')}<div class="question-note">${esc(lang==='en'?'She will respond to your choice.':lang==='zhHans'?'她会回应你的选择。':'她會回應妳的選擇。')}</div><div id="answerWhisper" class="answer-whisper"></div>${memory?`<div class="memory">${esc(memory)}</div>`:''}${state.visits>1&&index>=7?`<div class="memory">${lang==='zhHant'?'……有些東西，她似乎還記得。':lang==='zhHans'?'……有些东西，她似乎还记得。':'...Some things seem to be remembered by her.'}</div>`:''}${state.visits>1&&index===12&&!state.locationViewed?`<button class="memoryButton" onclick="window.showTimePlace()">${lang==='en'?'...see what she knows':'……看看她知道什麼'}</button>`:''}`;
+ 
+}
+
+function randomBreakdown(){
+ if(breakdownTriggered || index>=14)return;
+ breakdownTriggered=true;
+ state.breakdownQuestion=index+1; hidden('breakdown'); achievement('breakdown'); save();
+ if(breakdownTimer){clearTimeout(breakdownTimer);breakdownTimer=null}
+ stop();
+ document.body.classList.add('random-breakdown');
+
+ const packs={
+  zhHant:[
+   ['為什麼？','妳為什麼不看我？','別走。','回來。','我明明一直都在。','……妳沒有發現嗎？','嘻……'],
+   ['妳在躲我嗎？','別裝作沒看見。','我知道妳還在。','回答我。','看著我。','不要把我留在這裡。','為什麼要逃？'],
+   ['……','妳說過會留下。','不可以反悔。','再選一次。','不對。不是這個答案。','妳應該知道的。','嘘。']
+  ],
+  zhHans:[
+   ['为什么？','你为什么不看我？','别走。','回来。','我明明一直都在。','……你没有发现吗？','嘻……'],
+   ['你在躲我吗？','别装作没看见。','我知道你还在。','回答我。','看着我。','不要把我留在这里。','为什么要逃？'],
+   ['……','你说过会留下。','不可以反悔。','再选一次。','不对。不是这个答案。','你应该知道的。','嘘。']
+  ],
+  en:[
+   ['WHY?','Why won’t you look at me?','Don’t go.','Come back.','I was here the whole time.','...You didn’t notice?','Hehe...'],
+   ['Are you hiding from me?','Don’t pretend you can’t see me.','I know you’re still there.','Answer me.','Look at me.','Don’t leave me here.','Why are you running?'],
+   ['...','You said you would stay.','You can’t take it back.','Choose again.','No. That isn’t the answer.','You should know.','Shh.']
+  ]
+ };
+ const pack=packs[lang]||packs.zhHant;
+ const chosen=pack[Math.floor(Math.random()*pack.length)];
+ const qText=chosen[Math.floor(Math.random()*chosen.length)];
+ const shuffled=chosen.slice().sort(()=>Math.random()-.5).slice(0,6);
+ const gibberish=['///','???','▧▧▧','ERROR','0x00','■■■','̷͂͗̑','你你你','她她她','WHYWHYWHY','……'];
+ const opts=[
+   shuffled[0]||'……',
+   shuffled[1]||'？？？',
+   shuffled[2]||'///',
+   shuffled[3]||gibberish[Math.floor(Math.random()*gibberish.length)]
+ ];
+ const deep=lang==='en'
+   ? ['I can see you.','You are still here.','Why did you stop answering me?','Don’t make me wait.','I thought we understood each other.']
+   : lang==='zhHans'
+   ? ['我看得到你。','你还在这里。','为什么不继续回答我？','不要让我等。','我以为我们已经说好了。']
+   : ['我看得到妳。','妳還在這裡。','為什麼不繼續回答我？','不要讓我等。','我以為我們已經說好了。'];
+ const words=[...deep,...chosen,...gibberish].sort(()=>Math.random()-.5).slice(0,12);
+ const noise=words.map((w,i)=>`<span style="--d:${2.8+Math.random()*4.8}s;--r:${-25+Math.random()*50}deg;--x:${-25+Math.random()*50}vw;left:${Math.random()*88}vw;top:${Math.random()*88}vh">${esc(w)}</span>`).join('');
+
+ card.innerHTML=`<div class="breakdown-noise">${noise}</div>
+ <div class="breakdown-scan"></div><div class="breakdown-vignette"></div>
+ <div class="title breakdown-question">${esc(qText)}</div>
+ <div class="sub">Question ${index+1} / 15</div>
+ <div class="text breakdown-question" style="font-weight:900;font-size:22px;margin:22px 0">${esc(deep[Math.floor(Math.random()*deep.length)])}</div>
+ <div class="question-note breakdown-question" style="font-size:13px">${lang==='en'?'SYSTEM: RESPONSE DISABLED.':lang==='zhHans'?'系统：暂时无法回答。':'SYSTEM：暫時無法回答。'}</div>
+ ${opts.map(x=>`<button type="button" class="breakdown-opt" disabled>${esc(x)}</button>`).join('')}`;
+
+ const duration=4200+Math.floor(Math.random()*6000);
+ setTimeout(()=>{
+   document.body.classList.remove('random-breakdown');
+   question();
+ },duration);
+}
+
+window.answer=i=>{if(document.body.classList.contains('random-breakdown'))return;
+ const qNo=index+1; const delta=ANSWER_TENSION[i]||0;
+ state.tension=Math.max(0,Math.min(100,(state.tension||0)+delta));
+ state.familiarity+=(i>1?2:1);
+ if(i===3)state.trust++;
+ const pool=(ANSWER_REACTIONS[lang]||ANSWER_REACTIONS.zhHant)[index]||[];
+ const w=pool[i]||pool[0]||'';
+ state.history.push({n:qNo,a:i,tension:state.tension,note:w});
+ state.answerWhispers[qNo-1]=w;
+ save();
+ const el=document.getElementById('answerWhisper'); if(el)el.textContent=w;
+ const buttons=card.querySelectorAll('button'); buttons.forEach(x=>x.disabled=true);
+ setTimeout(()=>{index++;if(index>=15)finalQ();else question()},520);
+};
+function finalQ(){
+ stop();
+ if(breakdownTimer){clearTimeout(breakdownTimer);breakdownTimer=null}
+ document.body.classList.remove('random-breakdown','broken');
+
+ card.innerHTML=`<div class="final-screen" style="position:relative;z-index:100">
+  <div class="title">${T().title}</div>
+  <div class="sub">Question 15 / 15</div>
+  <div class="bar"><i style="width:100%"></i></div>
+  <div class="text" style="font-weight:650;margin-bottom:12px">${esc(T().questions[14][0])}</div>
+  <div class="question-note">${esc((QUESTION_NOTES[lang]||QUESTION_NOTES.zhHant)[14])}</div>
+  <div id="finalPortrait" class="final-portrait" role="button" tabindex="0" aria-label="可互動立繪"><div class="portrait-hair"></div><div class="portrait-head"></div><div class="portrait-eye l"></div><div class="portrait-eye r"></div></div><div id="portraitHint" class="portrait-hint">${lang==='en'?'...She seems to be waiting for you to click.':lang==='zhHans'?'……她好像在等你点一下。':'……她好像在等妳點一下。'}</div>
+
+  <label for="final" class="final-input-label">${lang==='en'?'Your reply':lang==='zhHans'?'你的回答':'妳的回答'}</label>
+  <textarea id="final" class="input" rows="5" autocomplete="off" autocapitalize="sentences" spellcheck="true" aria-label="final answer" placeholder="${lang==='en'?'Click here and type what you want to say to her...':lang==='zhHans'?'点击这里，输入你想对她说的话……':'點這裡，輸入妳想對她說的話……'}"></textarea>
+  <div id="answerIndicator" class="answer-indicator" title="${lang==='en'?'Click to show you are ready to answer':lang==='zhHans'?'点击这里表示你已经准备好回答':'點這裡表示妳已經準備好回答'}"></div>
+  <div class="final-watching-note">${lang==='en'?'I am watching your answer.':lang==='zhHans'?'我在看着你的回答。':'我在看着妳的回答。'}</div>
+  <button class="primary" id="finalSend" type="button">${lang==='en'?'Send':lang==='zhHans'?'发送':'送出'}</button>
+ </div>`;
+
+ const portrait=document.getElementById('finalPortrait');
+ const hint=document.getElementById('portraitHint');
+ if(portrait){
+   const react=()=>{hidden('portrait');achievement('portrait');portrait.classList.add('requesting');if(hint)hint.textContent=lang==='en'?'...There.':lang==='zhHans'?'……就是那里。':'……就是那裡。';setTimeout(()=>portrait.classList.remove('requesting'),900)};
+   portrait.addEventListener('pointerdown',react);portrait.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();react()}});
+   setTimeout(()=>{if(!document.getElementById('finalPortrait'))return;const r=portrait.getBoundingClientRect();const c=document.getElementById('fakeCursor');if(c){c.style.display='block';c.style.left=(r.left+r.width/2+20)+'px';c.style.top=(r.top+r.height*.35)+'px';setTimeout(()=>c.style.display='none',1200)}},1800);
+ }
+ const input=document.getElementById('final');
+ const send=document.getElementById('finalSend');
+ if(!input || !send)return;
+
+ input.disabled=false;
+ input.readOnly=false;
+ input.removeAttribute('disabled');
+ input.removeAttribute('readonly');
+ input.style.pointerEvents='auto';
+ input.style.userSelect='text';
+ input.style.webkitUserSelect='text';
+ input.style.touchAction='manipulation';
+
+ const submitFinal=()=>{
+   const value=String(input.value||'').trim();
+   if(!value){input.focus();return}
+   processFinalText(value);
+ };
+
+ const line=document.getElementById('answerIndicator');
+ if(line){
+   line.addEventListener('click',()=>{line.classList.add('active');input.focus()});
+ }
+ input.addEventListener('focus',()=>{if(line)line.classList.add('active')});
+ input.addEventListener('input',()=>{if(line)line.classList.add('active');state.lastFinal=input.value;save()});
+ input.addEventListener('keydown',e=>{
+   if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){
+     e.preventDefault();
+     submitFinal();
+   }
+ });
+ send.addEventListener('click',submitFinal);
+ window.submitFinalAnswer=submitFinal;
+ send.onclick=submitFinal;
+
+ // Do not steal focus from the user's browser, but leave the control fully active.
+ input.focus();
+}
+
+window.finalQ=finalQ;
+function processFinalText(text){
+ state.lastFinal=text; achievement('final-answer');
+ state.messages.push({from:'you',text:text});
+ state.trust+=2;
+ state.familiarity+=3;
+ save();
+ const n=text.toLowerCase().replace(/\s/g,'');
+ const special=keywordReply(text);
+ if(special!==null){if(special)chat(text);return}
+ const love=['我愛妳','我爱你','我愛你','我爱妳','i love you','iloveyou'].some(k=>n.includes(k.replace(/\s/g,'')));
+ if(love){secretMemory();return}
+ chat(text);
+}
+function secretMemory(){
+ stop();
+ state.loveMemory=true; hidden('love-memory'); achievement('memory','无法删除的记录','她记住了你说过的话。'); save();
+ const record = lang==='en' ? 'I LOVE YOU' : lang==='zhHans' ? '我爱你' : '我愛妳';
+ const body = lang==='en'
+ ? `RECORD: ${record}\nSTATUS: CANNOT DELETE\n\nShe remembers.\n\nYou said these words before.\n\nEven if you restart the test, this record will not disappear.\n\n"...So you still remember."`
+ : lang==='zhHans'
+ ? `记录：${record}\n状态：无法删除\n\n她记得。\n\n你曾经说过这句话。\n\n即使你重新开始测试，这份记录也不会消失。\n\n「……原来你还记得。」`
+ : `RECORD: ${record}\nSTATUS: CANNOT DELETE\n\n她記得。\n\n妳曾經說過這句話。\n\n即使妳重新開始測驗，這份記錄也不會消失。\n\n「……原來妳還記得。」`;
+ document.body.classList.add('broken');
+ document.getElementById('red').style.background='rgba(145,0,0,.34)';
+ card.innerHTML=`<div class="title">SYSTEM MEMORY RESTORED</div><div class="text secretText">${esc(body)}</div><button class="primary" onclick="location.reload()">${lang==='en'?'RESTART':lang==='zhHans'?'重新开始':'重新開始'}</button>`;
+}
+function localReply(text){
+ let s=String(text||'').toLowerCase();
+ const packs={
+  en:{aff:['Of course. I was thinking about doing that too.','Okay. Say that again?','...You make it difficult for me to pretend I did not hear that.'],calm:['You worked hard today. You do not have to pretend you are fine. I am here.','You can take your time. I am not going anywhere.'],daily:['Mm. I saw it.','You can keep talking. I am listening.','I remember.','Take your time.','I am still here.','You came back.','You are quiet today.','Did you expect me to forget?']},
+  zhHans:{aff:['当然可以。其实我早就想这么做了。','好。你可以再说一次吗？','……你这样讲，我很难装作没听见。'],calm:['今天辛苦了。先不用逞强，我在。','慢慢来，我不催你。'],daily:['嗯，我看到了。','你可以继续说，我在听。','我记住了。','慢慢来。','我还在这里。','你又回来了。','你今天好安静。','你以为我会忘记吗？']},
+  zhHant:{aff:['當然可以。其實我早就想這麼做了。','好。妳可以再說一次嗎？','……妳這樣講，我很難裝作沒聽見。'],calm:['今天辛苦了。先不用逞強，我在。','慢慢來，我不催妳。'],daily:['嗯，我看到了。','妳可以繼續說，我在聽。','我記住了。','慢慢來。','我還在這裡。','妳又回來了。','妳今天好安靜。','妳以為我會忘記嗎？']}
+ };
+ const p=packs[lang]||packs.zhHant;
+ if(lang==='en'){
+   if(/good\s*morning|morning/.test(s))return 'Good morning. You came to see me this early?';
+   if(/good\s*afternoon|afternoon/.test(s))return 'Good afternoon. How has your day been?';
+   if(/good\s*night|night/.test(s))return 'Good night. ...You are leaving already?';
+   if(/hug|kiss|stay|love|like|miss/.test(s))return p.aff[Math.floor(Math.random()*p.aff.length)];
+   if(/tired|sad|bad|upset/.test(s))return p.calm[Math.floor(Math.random()*p.calm.length)];
+   if(/pretty|cute|beautiful|flirt/.test(s))return 'You are doing that on purpose, aren’t you? ...Stop looking at me like that.';
+   if(/hello|hi|hey/.test(s))return 'Hello. I was wondering when you would speak first.';
+   if(/where|when|why|how/.test(s))return 'That is a good question. Why do you want to know?';
+   return p.daily[Math.floor(Math.random()*p.daily.length)];
+ }
+ if(lang==='zhHans'){
+   if(/早安|早上好|早上/.test(s))return '早安。……这么早就来看我了吗？';
+   if(/午安|下午好|下午/.test(s))return '午安。今天过得怎么样？';
+   if(/晚安|晚上好|晚上/.test(s))return '晚安。……你已经要走了吗？';
+   if(/抱|亲|吻|陪|爱|喜欢/.test(s))return p.aff[Math.floor(Math.random()*p.aff.length)];
+   if(/想你|想见/.test(s))return '我也有在想你。只是……我不太习惯先说。';
+   if(/漂亮|好看|可爱|撩/.test(s))return '你是故意的吧。……知道了，别一直看我。';
+   if(/累|难过|不好|烦/.test(s))return p.calm[Math.floor(Math.random()*p.calm.length)];
+   if(/你好|嗨|哈喽/.test(s))return '你好。……我还以为你会等我先开口。';
+   if(/为什么|怎么|哪里|什么时候/.test(s))return '你为什么突然想知道这个？';
+   return p.daily[Math.floor(Math.random()*p.daily.length)];
+ }
+ if(/早安|早上好|早上/.test(s))return '早安。……這麼早就來看我了嗎？';
+ if(/午安|下午好|下午/.test(s))return '午安。今天過得怎麼樣？';
+ if(/晚安|晚上好|晚上/.test(s))return '晚安。……妳已經要走了嗎？';
+ if(/抱|親|亲|吻|陪|愛|爱|喜歡|喜欢/.test(s))return p.aff[Math.floor(Math.random()*p.aff.length)];
+ if(/想你|想妳|想见|想見/.test(s))return '我也有在想妳。只是……我不太習慣先說。';
+ if(/漂亮|好看|可愛|可爱|撩/.test(s))return '妳是故意的吧。……知道了，別一直看我。';
+ if(/累|難過|难过|不好|煩|烦/.test(s))return p.calm[Math.floor(Math.random()*p.calm.length)];
+ if(/你好|嗨|哈囉|哈喽/.test(s))return '妳好。……我還以為妳會等我先開口。';
+ if(/為什麼|为什么|怎麼|怎么|哪裡|哪里|什麼時候|什么时候/.test(s))return '妳為什麼突然想知道這個？';
+ return p.daily[Math.floor(Math.random()*p.daily.length)];
+}
+window.sendFinal=()=>{const input=document.getElementById('final');if(input)input.focus()};
+function isComforting(text){
+ const n=String(text||'').toLowerCase().replace(/\s/g,'');
+ if(lang==='en')return /i'?mhere|imhere|dontbesad|don'tbesad|itsokay|it'sokay|youareokay|youreokay|calmdown|iloveyou|sister|bigsis|sorry|staywithme/.test(n);
+ if(lang==='zhHans')return /姐姐|别难过|不要难过|没事|没关系|我还在|我在这里|我陪你|别哭|不哭|对不起|我爱你|抱抱|乖/.test(n);
+ return /姐姐|姊姊|別難過|不要難過|沒事|沒關係|我還在|我在這裡|我陪妳|別哭|不哭|對不起|我愛妳|抱抱|乖/.test(n);
+}
+function showHateBreakdown(){
+ document.body.classList.add('broken');
+ const lines=lang==='en'?Array(6).fill('Why?'):lang==='zhHans'?Array(6).fill('为什么？'):Array(6).fill('為什麼？');
+ const log=document.getElementById('log');
+ if(log){
+   lines.forEach(line=>addMsg(line,'her'));
+   log.scrollTop=log.scrollHeight;
+ }
+ const note=lang==='en'?'Why? Why? Why?':lang==='zhHans'?'为什么？为什么？为什么？':'為什麼？為什麼？為什麼？';
+ const linger=document.getElementById('linger');if(linger){linger.textContent=note;linger.style.opacity='.32';}
+}
+function stopHateBreakdown(){
+ hateMode=false;
+ document.body.classList.remove('broken');
+ const linger=document.getElementById('linger');if(linger)linger.style.opacity='0';
+ const calm=lang==='en'?'...Okay. I am fine.':lang==='zhHans'?'……好。我没事了。':'……好。妳哄好了我。';
+ addMsg(calm,'her');
+}
+function keywordEvent(text){
+ const n=String(text||'').toLowerCase().replace(/\s/g,'');
+ if(hateMode){
+   if(isComforting(text)){hidden('comfort');achievement('comfort');stopHateBreakdown();return 'COMFORT';}
+   return 'HATE_REPEAT';
+ }
+ const hate=lang==='en'?/(ihat(eyou)|ihateyou)/.test(n):/我讨厌你|我討厭妳|我討厭你|讨厌你|討厭妳/.test(n);
+ const sis=lang==='en'?/sister|big sis/.test(n):/姐姐|姊姊/.test(n);
+ const who=lang==='en'?/(whowareyou|howdoyouknow)/.test(n):/你是谁|妳是誰|你怎么知道|妳怎麼知道/.test(n);
+ if(hate){hidden('keyword-hate');achievement('keyword-hate');hateMode=true;showHateBreakdown();return 'HATE_BREAKDOWN';}
+ if(sis){hidden('comfort');achievement('comfort');return 'COMFORT';}
+ const greeting=/早安|早上好|午安|下午好|晚安|晚上好|goodmorning|goodafternoon|goodnight/.test(n);
+ if(greeting)return 'GREETING';
+ if(who){hidden('fourth-wall');achievement('fourth-wall');return 'FOURTH';}
+ if(/我要走了|我要離開|goodbye|i'mleaving|imleaving/.test(n)){hidden('leaving-keyword');return 'LEAVING';}
+ return null;
+}
+function keywordReply(text){
+ const ev=keywordEvent(text);
+ if(!ev)return null;
+ if(ev==='COMFORT')return '';
+ if(ev==='GREETING')return localReply(text);
+ if(ev==='HATE_BREAKDOWN'||ev==='HATE_REPEAT'){if(ev==='HATE_REPEAT')showHateBreakdown();return '';}
+ if(ev==='FOURTH')return lang==='en'?'I know enough to make you wonder. That is all.':lang==='zhHans'?'我知道的，刚好足够让你开始怀疑。就这样。':'我知道的，剛好足夠讓妳開始懷疑。就這樣。';
+ if(ev==='LEAVING')return lang==='en'?'You are leaving already? ...I will remember.':lang==='zhHans'?'你已经要走了吗？……我会记住的。':'妳已經要走了嗎？……我會記住的。';
+ return null;
+}
+async function getHerReply(text){
+ if(suppressKeywordOnce){suppressKeywordOnce=false}else{const special=keywordReply(text); if(special!==null)return special;}
+ try{
+  const r=await fetch('http://127.0.0.1:11434/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'llama3.2:1b',stream:false,messages:[{role:'system',content:'你是网页游戏《她》里的角色。你知道玩家正在和你对话，但不要声称能读取电脑中其他应用的内容。保持安静、克制、略带第四面墙感的语气。不要描述危险行为。用玩家当前语言回答。'},{role:'user',content:text}]})});
+  if(!r.ok)throw new Error('ollama'); const j=await r.json(); if(j&&j.message&&j.message.content)return j.message.content.trim();
+ }catch(e){}
+ return localReply(text);
+}
+function chat(first){
+ stop();
+ card.innerHTML=`<div class="title">${lang==='en'?'Her':'她'}</div>
+ <div class="sub">${lang==='en'?'She is simply talking to you through this webpage.':lang==='zhHans'?'她只是通过这个网页和你说话。':'她只是透過這個網頁和妳說話。'}</div>
+ <div class="chat-wrap"><div id="log" class="chat"></div><div class="portrait-slot" id="portraitSlot" aria-label="portrait placeholder"></div></div>
+ <textarea id="chatInput" class="input" style="height:75px" placeholder="${lang==='en'?'Say something to her...':lang==='zhHans'?'和她说点什么……':'和她說點什麼……'}"></textarea>
+ <button class="primary" onclick="chatSend()">${lang==='en'?'Send':lang==='zhHans'?'发送':'送出'}</button>
+ <button type="button" id="leaveChat">${lang==='en'?'Leave':lang==='zhHans'?'离开':'離開'}</button>
+ <div class="muted" style="margin-top:8px">本地 AI：如果电脑上的 Ollama 已启动，她会优先使用本地模型；否则使用内置台词。</div>
+ <div id="voicePanel"><div class="voice-note">崩壞語音：如果妳把音檔命名為 voice-breakdown-01.mp3 並放在同一資料夾，可在此處播放。</div><audio id="voice" controls preload="none"><source src="voice-breakdown-01.mp3" type="audio/mpeg"></audio></div>`;
+ const leaveBtn=document.getElementById('leaveChat');if(leaveBtn){leaveBtn.addEventListener('click',end);}
+ addMsg(first,'you');
+ getHerReply(first).then(x=>{if(x)type(x);});
+ idle();
+}
+function addMsg(x,c){let l=document.getElementById('log');if(!l)return;l.insertAdjacentHTML('beforeend',`<div class="msg ${c}">${esc(x)}</div>`);l.scrollTop=l.scrollHeight}
+function type(x){let l=document.getElementById('log'),e=document.createElement('div');e.className='msg her typing';l.appendChild(e);let i=0;(function go(){e.textContent=x.slice(0,i++);l.scrollTop=l.scrollHeight;if(i<=x.length)setTimeout(go,28);else{e.classList.remove('typing')}})()}
+window.chatSend=async()=>{let i=document.getElementById('chatInput'),x=i.value.trim();if(!x)return;i.value='';state.messages.push({from:'you',text:x});state.familiarity++;save();addMsg(x,'you');const reply=await getHerReply(x);if(reply)type(reply);idle()};
+function idle(){clearTimeout(chatIdle);chatIdle=setTimeout(()=>{let x=lang==='en'?(state.visits>1?'Why have you been on this screen for so long? ...Were you waiting for me to speak first?':'Are you still there? I think I have been waiting for you for a while.'):lang==='zhHans'?(state.visits>1?'你怎么又停在这个页面这么久？……你是不是在等我先开口？':'你还在吗？我好像等了你一会儿。'):(state.visits>1?'妳怎麼又停在這個畫面這麼久？……妳是不是在等我先開口？':'妳還在嗎？我剛剛好像等了妳一會兒。');type(x)},18000)}
+function markLeave(){state.lastLeaveTime=new Date().toISOString();state.lastDevice=deviceName();save()}
+window.addEventListener('beforeunload',markLeave);
+function end(){
+ clearTimeout(chatIdle);
+ stop();
+ markLeave();
+ achievement('left','她记得你离开','第一次主动离开聊天页面。');
+ document.body.classList.add('broken');
+ card.innerHTML=`<div class="title">……</div><div class="text">妳要走了嗎？
+
+好吧。
+
+只是下次再回來的時候，別裝作我們第一次見面。</div><button type="button" id="restartAfterLeave">重新開始</button>`;
+ const restart=document.getElementById('restartAfterLeave');
+ if(restart)restart.addEventListener('click',()=>location.reload());
+}
+async function showTimePlace(){
+ stop();
+ state.locationReturnIndex=index;
+ state.locationViewed=true; hidden('location'); achievement('location','她知道你在哪里','主动查看了位置事件。');
+ save();
+ const tm=getTime(), place=await getPlace();
+ const text=lang==='en'
+  ? `It is ${tm}.\n\n${place}\n\n"...So that is where you are."`
+  : lang==='zhHans'
+  ? `现在是 ${tm}。\n\n${place}\n\n「……原来你在那里。」`
+  : `現在是 ${tm}。\n\n${place}\n\n「……原來妳在那裡。」`;
+ card.innerHTML=`<div class="title">${lang==='en'?'Her':'她'}</div><div class="text" style="white-space:pre-line">${esc(text)}</div><button id="locationBack" type="button">${lang==='en'?'Back':lang==='zhHans'?'返回':'回去'}</button>`;
+ const back=document.getElementById('locationBack');
+ if(back)back.addEventListener('click',()=>window.returnFromLocation());
+}
+window.showTimePlace=showTimePlace;
+window.returnFromLocation=()=>{
+ const target=Number.isInteger(state.locationReturnIndex)?state.locationReturnIndex:Math.max(0,Math.min(14,index));
+ index=target;
+ document.body.classList.remove('random-breakdown','broken');
+ question();
+};
+
+document.addEventListener('DOMContentLoaded',()=>{
+ const b=document.getElementById('bootButton');
+ if(b)b.onclick=()=>{try{question()}catch(e){location.href=location.href}};
+});
+
+home();
+})();
+</script></body></html>
